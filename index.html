@@ -40,7 +40,7 @@
       display: grid;
       grid-template-columns: 0.95fr 1.05fr;
       gap: 18px;
-      align-items: stretch;
+      align-items: start;
     }
 
     .intro,
@@ -84,13 +84,16 @@
 
     h1 {
       margin: 0;
-      max-width: 9ch;
+      max-width: 100%;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(4.6rem, 10vw, 9.6rem);
+      font-size: clamp(2.45rem, 5vw, 5.7rem);
       font-weight: 400;
-      line-height: 0.78;
+      line-height: 0.9;
       letter-spacing: 0;
       text-transform: uppercase;
+      white-space: nowrap;
+      overflow-wrap: normal;
+      word-break: normal;
     }
 
     .lede {
@@ -163,10 +166,9 @@
     }
 
     .assistant {
-      min-height: calc(100vh - 56px);
       border-radius: var(--radius);
       display: grid;
-      grid-template-rows: auto auto 1fr auto;
+      grid-template-rows: auto auto minmax(0, auto) auto;
       overflow: hidden;
     }
 
@@ -266,15 +268,24 @@
     }
 
     .messages {
+      min-height: 0;
+      max-height: clamp(190px, 42vh, 440px);
       padding: 24px;
       overflow-y: auto;
       background: #f7f7f4;
+      scroll-behavior: smooth;
     }
 
     .message-row {
+      width: 100%;
       display: flex;
+      align-items: flex-start;
       margin-bottom: 14px;
       animation: rise 260ms ease both;
+    }
+
+    .message-row:last-child {
+      margin-bottom: 0;
     }
 
     .message-row.user {
@@ -282,19 +293,23 @@
     }
 
     .bubble {
-      width: fit-content;
+      display: inline-block;
+      width: auto;
+      inline-size: fit-content;
       max-width: min(78%, 560px);
+      max-inline-size: min(78%, 560px);
       border-radius: 18px;
-      padding: 13px 15px;
+      padding: 10px 12px;
       line-height: 1.5;
       font-size: 0.96rem;
       font-weight: 300;
-      box-shadow: 0 10px 30px rgba(21, 21, 21, 0.08);
+      box-shadow: none;
+      white-space: normal;
     }
 
     .assistant-bubble {
-      background: #fff;
-      border: 1px solid var(--line);
+      background: transparent;
+      border: 0;
       border-top-left-radius: 2px;
     }
 
@@ -390,6 +405,55 @@
       }
     }
 
+    @media (min-width: 1040px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .site {
+        height: 100vh;
+        grid-template-columns: minmax(440px, 0.9fr) minmax(580px, 1.1fr);
+      }
+
+      .intro,
+      .assistant {
+        min-height: 0;
+      }
+
+      .intro {
+        padding: clamp(34px, 4vw, 58px);
+      }
+
+      h1 {
+        font-size: clamp(2.45rem, 3.9vw, 5rem);
+        max-width: 100%;
+      }
+
+      .assistant {
+        width: 100%;
+      }
+
+      .chat-topbar {
+        padding: 24px 28px;
+      }
+
+      .suggestions {
+        flex-wrap: wrap;
+        align-content: start;
+        overflow-x: visible;
+      }
+
+      .messages {
+        max-height: clamp(210px, 46vh, 520px);
+        padding: 28px;
+      }
+
+      .bubble {
+        max-width: min(72%, 620px);
+        max-inline-size: min(72%, 620px);
+      }
+    }
+
     @media (max-width: 880px) {
       .site {
         grid-template-columns: 1fr;
@@ -397,7 +461,11 @@
       }
 
       .assistant {
-        min-height: 72vh;
+        width: 100%;
+      }
+
+      .messages {
+        max-height: 54vh;
       }
     }
 
@@ -416,6 +484,11 @@
         box-shadow: none;
       }
 
+      h1 {
+        font-size: clamp(2.15rem, 10.4vw, 3.35rem);
+        line-height: 0.9;
+      }
+
       .stats {
         grid-template-columns: 1fr;
       }
@@ -429,11 +502,13 @@
       }
 
       .messages {
+        max-height: 58vh;
         padding: 18px;
       }
 
       .bubble {
         max-width: 92%;
+        max-inline-size: 92%;
       }
 
       .composer {
@@ -577,69 +652,107 @@
         keywords: ["role", "roles", "target", "interested", "career", "apply", "applying", "next", "position"],
         title: "Target roles",
         response: () =>
-          "Julien is focused on roles that sit between strategy, design, innovation, and organizational change. His strongest fit is work where ambiguity needs to become clear direction, and where that direction has to become something people can see, test, and build around."
+          "Julien is focused on roles where strategy, design, innovation, and organizational change meet. He is strongest when ambiguity needs to become clear direction."
       },
       {
         id: "projects",
         keywords: ["project", "projects", "impact", "case", "case study", "work", "results", "wins", "campaign", "doordash", "unitedhealthcare", "optum", "jetblue"],
         title: "Project impact",
         response: () =>
-          "Julien's strongest project examples show trust-building, channel expansion, and strategic influence. DoorDash shows how he helped open new creative possibilities with interactive mobile and DOOH work. UnitedHealthcare and Optum show enterprise education, stakeholder management, and broader adoption of CTV, OLV, DOOH, and display. JetBlue Vacations shows how strategic consultation helped shift client confidence and support major quarter-over-quarter growth."
+          "Julien's strongest projects show trust-building, channel expansion, and strategic influence. DoorDash, UnitedHealthcare, Optum, and JetBlue all show his ability to turn client uncertainty into stronger creative direction and measurable growth."
       },
       {
         id: "skills",
         keywords: ["skill", "skills", "experience", "background", "strength", "strengths", "resume", "qualified", "capabilities"],
         title: "Skills and experience",
         response: () =>
-          `Julien's strongest mix is strategy plus making. He can frame the business problem, translate it into creative direction, and understand how the work will be built across digital channels. Core strengths include ${profile.skills.slice(0, -1).join(", ")}, and ${profile.skills.at(-1)}.`
+          "Julien's strongest mix is strategy plus making. He brings creative strategy, UX thinking, art direction, enterprise consultation, AI workflow development, and team leadership."
       },
       {
         id: "fit",
         keywords: ["fit", "good fit", "why julien", "hire", "candidate", "human", "centered", "centred", "organizational", "organisational", "systems", "transformation"],
         title: "Why Julien fits",
         response: () =>
-          "Julien is a strong fit for work that needs both strategic clarity and creative momentum. His experience includes facilitation, executive-facing strategy, AI adoption, cross-functional education, and helping teams understand not just what to make, but why it matters. He brings creative taste, business context, and the ability to get people aligned around a clearer path forward."
+          "Julien is a strong fit for work that needs strategic clarity and creative momentum. He brings facilitation, executive-facing strategy, AI adoption, cross-functional education, and the ability to align teams around what matters."
       },
       {
         id: "ai",
         keywords: ["ai", "artificial", "automation", "future", "innovation", "workflow", "agent", "agents", "prompt"],
         title: "AI approach",
         response: () =>
-          "Julien's AI angle is practical, not novelty-led. He has worked on AI agents that support creative strategy, recommendations, and pre-sale workflows. The goal is to reduce repetitive briefing work while improving the quality of strategic output. His interest is human plus AI collaboration: using the tools to raise the ceiling, not remove the judgment."
+          "Julien uses AI as a practical strategy tool. He has worked on agents that support recommendations, briefs, and pre-sale workflows while keeping human judgment at the centre."
       },
       {
         id: "approach",
         keywords: ["approach", "personality", "creative", "process", "design thinking", "method", "style", "think"],
         title: "Creative approach",
         response: () =>
-          "Julien's creative approach starts with research, context, and the real behaviour of the audience. From there, he looks for the simplest strategic idea that can carry the work, then shapes the design system, message, and channel execution around it. His style is analytical, visual, and curious. He likes making complex things feel graspable."
+          "Julien starts with research, context, and audience behaviour. Then he finds the simplest strategic idea that can carry the work across design, message, and channel execution."
       },
       {
         id: "education",
         keywords: ["education", "school", "ux", "mdei", "university", "degree", "ocad", "toronto", "study", "studied"],
         title: "Education",
         response: () =>
-          "Julien studied Advertising at OCAD University, with a specialization in strategy, systems design, and art direction. He also completed a User Experience Design certificate through the University of Toronto. That background shows up in his work through research-led thinking, visual craft, systems awareness, and a bias toward making ideas understandable for real people."
+          "Julien studied Advertising at OCAD University, specializing in strategy, systems design, and art direction. He also completed a User Experience Design certificate through the University of Toronto."
       },
       {
         id: "contact",
         keywords: ["contact", "email", "portfolio", "linkedin", "reach", "website"],
         title: "Contact",
         response: () =>
-          `The best way to keep going is through Julien's portfolio at ${profile.portfolio}, LinkedIn, or email at ${profile.email}. The fuller picture is in the work: strategy, design, campaigns, client growth, and a clear appetite for building what comes next.`
+          `The best way to keep going is through Julien's portfolio at ${profile.portfolio}, LinkedIn, or email at ${profile.email}.`
       }
     ];
 
     const fallbackResponses = [
-      "Julien's through-line is creative strategy grounded in human-centred design. He studies the audience, frames the business problem, and helps teams build work that can move in-market.",
-      "Julien is strongest where strategy, creative direction, client leadership, and systems thinking meet. You can ask about his target roles, project impact, AI work, education, or creative approach.",
-      "Julien has grown from designer and creative director roles into enterprise creative strategy leadership at StackAdapt. The pattern is consistent: make complex ideas clear, make the work stronger, and bring people along while doing it."
+      "Julien's through-line is creative strategy grounded in human-centred design. He studies the audience, frames the problem, and helps teams build stronger work.",
+      "Julien is strongest where strategy, creative direction, client leadership, and systems thinking meet. Try asking about his projects, AI work, or creative approach.",
+      "Julien has grown from designer and creative director roles into enterprise creative strategy leadership. His pattern is simple: clarify the idea, strengthen the work, and bring people along."
     ];
 
     const messages = document.querySelector("#messages");
     const form = document.querySelector("#chatForm");
     const input = document.querySelector("#questionInput");
     const suggestionButtons = document.querySelectorAll(".suggestions button");
+    const headline = document.querySelector(".intro h1");
+
+    function fitHeadline() {
+      if (!headline) return;
+
+      headline.style.fontSize = "";
+
+      const parentWidth = headline.parentElement.clientWidth;
+      const currentSize = parseFloat(window.getComputedStyle(headline).fontSize);
+
+      if (!parentWidth || !currentSize) return;
+
+      const availableWidth = parentWidth - 2;
+      const neededWidth = headline.scrollWidth;
+
+      if (neededWidth > availableWidth) {
+        const nextSize = Math.max(20, Math.floor(currentSize * (availableWidth / neededWidth)));
+        headline.style.fontSize = `${nextSize}px`;
+      }
+    }
+
+    function scrollToLatest(behavior = "smooth") {
+      window.requestAnimationFrame(() => {
+        messages.scrollTo({
+          top: messages.scrollHeight,
+          behavior
+        });
+
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior
+        });
+      });
+    }
+
+    function cleanMessage(text) {
+      return text.replace(/\s+/g, " ").trim();
+    }
 
     function addMessage(text, sender = "assistant") {
       const row = document.createElement("div");
@@ -647,11 +760,11 @@
 
       const bubble = document.createElement("div");
       bubble.className = sender === "assistant" ? "bubble assistant-bubble" : "bubble";
-      bubble.textContent = text;
+      bubble.textContent = cleanMessage(text);
 
       row.appendChild(bubble);
       messages.appendChild(row);
-      messages.scrollTop = messages.scrollHeight;
+      scrollToLatest();
       return row;
     }
 
@@ -666,7 +779,7 @@
         </div>
       `;
       messages.appendChild(row);
-      messages.scrollTop = messages.scrollHeight;
+      scrollToLatest();
       return row;
     }
 
@@ -691,11 +804,10 @@
         return matches[0].response();
       }
 
-      const intro = "A few parts of Julien's background are relevant here.";
       const body = matches
         .map((match) => `${match.title}: ${match.response()}`)
         .join(" ");
-      return `${intro} ${body}`;
+      return body;
     }
 
     function findResponse(question) {
@@ -709,6 +821,7 @@
         return joinResponses(rankedMatches);
       }
 
+      const normalized = normalizeText(question);
       const index = Math.abs([...normalized].reduce((total, char) => total + char.charCodeAt(0), 0)) % fallbackResponses.length;
       return fallbackResponses[index];
     }
@@ -724,6 +837,7 @@
       window.setTimeout(() => {
         typing.remove();
         addMessage(findResponse(trimmed), "assistant");
+        scrollToLatest();
       }, 520 + Math.min(trimmed.length * 8, 600));
     }
 
@@ -736,9 +850,14 @@
       button.addEventListener("click", () => ask(button.textContent));
     });
 
+    window.addEventListener("resize", fitHeadline);
+    window.addEventListener("load", fitHeadline);
+
     addMessage(
-      "Hi, I'm Julien's portfolio assistant. Ask me what he is looking for next, which projects best show his impact, how his skills connect to strategy and design roles, or how he approaches creative problem solving."
+      "Hi, I'm Julien's portfolio assistant. Ask me about his roles, projects, skills, AI work, or creative approach."
     );
+    fitHeadline();
+    scrollToLatest("auto");
   </script>
 </body>
 </html>
