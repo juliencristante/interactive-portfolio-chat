@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Julien Cristante | Portfolio Assistant</title>
+  <style>
+    :root {
+      --ink: #050505;
+      --muted: #5c5c5c;
+      --line: #d8d8d8;
+      --paper: #f7f7f4;
+      --panel: #ffffff;
+      --reverse: #050505;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.1);
+      --radius: 8px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 34px 34px;
+      color: var(--ink);
+    }
+
+    .site {
+      width: min(1320px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 28px 0;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .intro,
+    .assistant {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      border-radius: var(--radius);
+      padding: clamp(24px, 4vw, 42px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .intro::after {
+      content: "JC";
+      position: absolute;
+      right: -18px;
+      bottom: -42px;
+      color: rgba(0, 0, 0, 0.035);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17rem;
+      font-weight: 400;
+      line-height: 0.8;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--ink);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 9ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(4.6rem, 10vw, 9.6rem);
+      font-weight: 400;
+      line-height: 0.78;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .lede {
+      max-width: 620px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.55;
+      font-weight: 300;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.55rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .links a {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 13px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.72);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .links a:hover {
+      transform: translateY(-2px);
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .assistant {
+      min-height: calc(100vh - 56px);
+      border-radius: var(--radius);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .chat-topbar {
+      padding: 22px 24px;
+      background: var(--reverse);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 0;
+      border: 1px solid #fff;
+      background: #050505;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      flex: 0 0 auto;
+    }
+
+    .identity h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.24rem;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .identity p {
+      margin: 3px 0 0;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.84rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.82rem;
+      flex: 0 0 auto;
+    }
+
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.12);
+    }
+
+    .suggestions {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .suggestions button {
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 13px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .suggestions button:hover {
+      transform: translateY(-2px);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .messages {
+      padding: 24px;
+      overflow-y: auto;
+      background: #f7f7f4;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 14px;
+      animation: rise 260ms ease both;
+    }
+
+    .message-row.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      width: fit-content;
+      max-width: min(78%, 560px);
+      border-radius: 18px;
+      padding: 13px 15px;
+      line-height: 1.5;
+      font-size: 0.96rem;
+      font-weight: 300;
+      box-shadow: 0 10px 30px rgba(21, 21, 21, 0.08);
+    }
+
+    .assistant-bubble {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top-left-radius: 2px;
+    }
+
+    .user .bubble {
+      background: var(--ink);
+      color: #fff;
+      border-top-right-radius: 2px;
+    }
+
+    .typing {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 0;
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: pulse 900ms ease-in-out infinite;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: 120ms;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: 240ms;
+    }
+
+    .composer {
+      padding: 16px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      gap: 10px;
+    }
+
+    .composer input {
+      width: 100%;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 14px 16px;
+      font: inherit;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .composer input:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .composer button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0 19px;
+      background: var(--ink);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .composer button:hover {
+      transform: translateY(-1px);
+      background: #333;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 80%, 100% {
+        opacity: 0.35;
+        transform: translateY(0);
+      }
+      40% {
+        opacity: 1;
+        transform: translateY(-3px);
+      }
+    }
+
+    @media (max-width: 880px) {
+      .site {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .assistant {
+        min-height: 72vh;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .site {
+        width: 100%;
+        padding: 0;
+        gap: 0;
+      }
+
+      .intro,
+      .assistant {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        box-shadow: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-topbar {
+        align-items: flex-start;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .messages {
+        padding: 18px;
+      }
+
+      .bubble {
+        max-width: 92%;
+      }
+
+      .composer {
+        padding: 12px;
+      }
+
+      .composer button {
+        padding: 0 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="site">
+    <section class="intro" aria-label="Portfolio introduction">
+      <div>
+        <p class="eyebrow">Strategy / Human Centred Processes / Design</p>
+        <h1>Julien Cristante</h1>
+        <p class="lede">
+          A creative strategist and design thinker building the bridge between human-centred insight,
+          business ambition, and work that actually gets made. Ask the assistant about roles,
+          projects, experience, or the overlap between systems and imagination.
+        </p>
+      </div>
+
+      <div>
+        <div class="stats" aria-label="Career highlights">
+          <div class="stat">
+            <strong>Enterprise</strong>
+            <span>Creative strategy for multimillion-dollar client growth across StackAdapt accounts.</span>
+          </div>
+          <div class="stat">
+            <strong>AI + UX</strong>
+            <span>R&D work with AI agents, UX certification, and design-thinking facilitation.</span>
+          </div>
+          <div class="stat">
+            <strong>Leadership</strong>
+            <span>West Coast Team Lead, mentor, educator, and cross-functional partner.</span>
+          </div>
+          <div class="stat">
+            <strong>Making</strong>
+            <span>Branding, art direction, campaign concepts, interactive ads, CTV, DOOH, and OLV.</span>
+          </div>
+        </div>
+
+        <nav class="links" aria-label="Portfolio links">
+          <a href="https://www.juliencristante.com/" target="_blank" rel="noreferrer">Portfolio</a>
+          <a href="https://www.linkedin.com/in/julien-cristante-a1a405157" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:julienccristante@gmail.com">Email</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="assistant" aria-label="AI portfolio assistant">
+      <header class="chat-topbar">
+        <div class="identity">
+          <div class="avatar" aria-hidden="true">JC</div>
+          <div>
+            <h2>Julien Portfolio Assistant</h2>
+            <p>Conversational context for strategy, design, and creative leadership</p>
+          </div>
+        </div>
+        <div class="status">Ready</div>
+      </header>
+
+      <div class="suggestions" aria-label="Suggested questions">
+        <button type="button">What roles is Julien targeting?</button>
+        <button type="button">What projects show his impact?</button>
+        <button type="button">What are Julien's strongest skills?</button>
+        <button type="button">Why is Julien a strong fit?</button>
+        <button type="button">How does Julien use AI?</button>
+        <button type="button">What is Julien's creative approach?</button>
+      </div>
+
+      <div class="messages" id="messages" aria-live="polite"></div>
+
+      <form class="composer" id="chatForm">
+        <input
+          id="questionInput"
+          type="text"
+          autocomplete="off"
+          placeholder="Ask about Julien's experience, projects, or approach..."
+          aria-label="Ask a question"
+        />
+        <button type="submit">Ask</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const profile = {
+      name: "Julien Cristante",
+      title: "West Coast Team Lead, Creative Strategist at StackAdapt",
+      email: "julienccristante@gmail.com",
+      portfolio: "juliencristante.com",
+      roles:
+        "Julien is targeting roles that sit between strategy, design, innovation, and organizational change. Think creative strategy lead, brand strategist, design strategy, experience strategy, innovation strategy, AI transformation, or human-centred organizational design.",
+      whyInterested:
+        "He is drawn to work where strategy becomes something people can actually use: better systems, stronger creative, sharper decisions, and experiences that make complex ideas easier to understand.",
+      skills: [
+        "Creative and market strategy",
+        "Human-centred design and UX methods",
+        "Art direction, branding, layout, and campaign concepting",
+        "Enterprise client consultation and executive presentation",
+        "Interactive ad formats across CTV, DOOH, OLV, display, native, and mobile in-app",
+        "AI workflow experimentation, prompt systems, and strategist enablement",
+        "Team mentorship, facilitation, and cross-functional education"
+      ],
+      projects: [
+        {
+          name: "DoorDash",
+          copy:
+            "Julien helped move a resistant enterprise client from limited creative involvement into deeper trust with StackAdapt's Creative Studio. Through strategic education, in-person presentations, and new interactive MAPP/HTML concepts, the work supported expansion across mobile in-app, DOOH, Spanish-language creative, and broader campaign adoption."
+        },
+        {
+          name: "UnitedHealthcare / Optum",
+          copy:
+            "Across UHC, Optum, Surest, and UHC Global work, Julien helped scale recurring strategy sessions, custom interactive video, and channel testing across CTV, OLV, DOOH, and display. The impact was both commercial and organizational: more teams understood the creative opportunity, and larger budgets followed."
+        },
+        {
+          name: "JetBlue Vacations",
+          copy:
+            "Julien's Florida strategy visit helped the client gain comfort with interactive creative, dynamic messaging, and a more specific funnel approach. The account grew from roughly $255K in Q4 to about $939K in Q1 as new campaign thinking opened more opportunity."
+        },
+        {
+          name: "AI Strategy Pilot",
+          copy:
+            "Julien co-developed stronger AI agents for creative strategy and recommendations. The work focused on helping strategists move faster on briefs, generate better pre-sale thinking, and translate Creative Studio capabilities into practical client recommendations."
+        },
+        {
+          name: "Portfolio Case Studies",
+          copy:
+            "His portfolio shows the broader creative foundation behind the strategy work: Sette Bello branding and packaging, Protagonist Health healthcare branding, legal rebrand work, product and advertising design, healthcare literacy systems, and B2B tech campaign thinking."
+        }
+      ]
+    };
+
+    const answers = [
+      {
+        id: "roles",
+        keywords: ["role", "roles", "target", "interested", "career", "apply", "applying", "next", "position"],
+        title: "Target roles",
+        response: () =>
+          "Julien is focused on roles that sit between strategy, design, innovation, and organizational change. His strongest fit is work where ambiguity needs to become clear direction, and where that direction has to become something people can see, test, and build around."
+      },
+      {
+        id: "projects",
+        keywords: ["project", "projects", "impact", "case", "case study", "work", "results", "wins", "campaign", "doordash", "unitedhealthcare", "optum", "jetblue"],
+        title: "Project impact",
+        response: () =>
+          "Julien's strongest project examples show trust-building, channel expansion, and strategic influence. DoorDash shows how he helped open new creative possibilities with interactive mobile and DOOH work. UnitedHealthcare and Optum show enterprise education, stakeholder management, and broader adoption of CTV, OLV, DOOH, and display. JetBlue Vacations shows how strategic consultation helped shift client confidence and support major quarter-over-quarter growth."
+      },
+      {
+        id: "skills",
+        keywords: ["skill", "skills", "experience", "background", "strength", "strengths", "resume", "qualified", "capabilities"],
+        title: "Skills and experience",
+        response: () =>
+          `Julien's strongest mix is strategy plus making. He can frame the business problem, translate it into creative direction, and understand how the work will be built across digital channels. Core strengths include ${profile.skills.slice(0, -1).join(", ")}, and ${profile.skills.at(-1)}.`
+      },
+      {
+        id: "fit",
+        keywords: ["fit", "good fit", "why julien", "hire", "candidate", "human", "centered", "centred", "organizational", "organisational", "systems", "transformation"],
+        title: "Why Julien fits",
+        response: () =>
+          "Julien is a strong fit for work that needs both strategic clarity and creative momentum. His experience includes facilitation, executive-facing strategy, AI adoption, cross-functional education, and helping teams understand not just what to make, but why it matters. He brings creative taste, business context, and the ability to get people aligned around a clearer path forward."
+      },
+      {
+        id: "ai",
+        keywords: ["ai", "artificial", "automation", "future", "innovation", "workflow", "agent", "agents", "prompt"],
+        title: "AI approach",
+        response: () =>
+          "Julien's AI angle is practical, not novelty-led. He has worked on AI agents that support creative strategy, recommendations, and pre-sale workflows. The goal is to reduce repetitive briefing work while improving the quality of strategic output. His interest is human plus AI collaboration: using the tools to raise the ceiling, not remove the judgment."
+      },
+      {
+        id: "approach",
+        keywords: ["approach", "personality", "creative", "process", "design thinking", "method", "style", "think"],
+        title: "Creative approach",
+        response: () =>
+          "Julien's creative approach starts with research, context, and the real behaviour of the audience. From there, he looks for the simplest strategic idea that can carry the work, then shapes the design system, message, and channel execution around it. His style is analytical, visual, and curious. He likes making complex things feel graspable."
+      },
+      {
+        id: "education",
+        keywords: ["education", "school", "ux", "mdei", "university", "degree", "ocad", "toronto", "study", "studied"],
+        title: "Education",
+        response: () =>
+          "Julien studied Advertising at OCAD University, with a specialization in strategy, systems design, and art direction. He also completed a User Experience Design certificate through the University of Toronto. That background shows up in his work through research-led thinking, visual craft, systems awareness, and a bias toward making ideas understandable for real people."
+      },
+      {
+        id: "contact",
+        keywords: ["contact", "email", "portfolio", "linkedin", "reach", "website"],
+        title: "Contact",
+        response: () =>
+          `The best way to keep going is through Julien's portfolio at ${profile.portfolio}, LinkedIn, or email at ${profile.email}. The fuller picture is in the work: strategy, design, campaigns, client growth, and a clear appetite for building what comes next.`
+      }
+    ];
+
+    const fallbackResponses = [
+      "Julien's through-line is creative strategy grounded in human-centred design. He studies the audience, frames the business problem, and helps teams build work that can move in-market.",
+      "Julien is strongest where strategy, creative direction, client leadership, and systems thinking meet. You can ask about his target roles, project impact, AI work, education, or creative approach.",
+      "Julien has grown from designer and creative director roles into enterprise creative strategy leadership at StackAdapt. The pattern is consistent: make complex ideas clear, make the work stronger, and bring people along while doing it."
+    ];
+
+    const messages = document.querySelector("#messages");
+    const form = document.querySelector("#chatForm");
+    const input = document.querySelector("#questionInput");
+    const suggestionButtons = document.querySelectorAll(".suggestions button");
+
+    function addMessage(text, sender = "assistant") {
+      const row = document.createElement("div");
+      row.className = `message-row ${sender}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = sender === "assistant" ? "bubble assistant-bubble" : "bubble";
+      bubble.textContent = text;
+
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+      return row;
+    }
+
+    function showTyping() {
+      const row = document.createElement("div");
+      row.className = "message-row";
+      row.innerHTML = `
+        <div class="bubble assistant-bubble">
+          <span class="typing" aria-label="Assistant is typing">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+      `;
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+      return row;
+    }
+
+    function normalizeText(text) {
+      return text.toLowerCase().replace(/[^\w\s']/g, " ");
+    }
+
+    function scoreAnswer(question, answer) {
+      const normalized = normalizeText(question);
+      return answer.keywords.reduce((score, keyword) => {
+        const cleanKeyword = normalizeText(keyword).trim();
+        if (!cleanKeyword) return score;
+        if (normalized.includes(cleanKeyword)) {
+          return score + cleanKeyword.split(" ").length;
+        }
+        return score;
+      }, 0);
+    }
+
+    function joinResponses(matches) {
+      if (matches.length === 1) {
+        return matches[0].response();
+      }
+
+      const intro = "A few parts of Julien's background are relevant here.";
+      const body = matches
+        .map((match) => `${match.title}: ${match.response()}`)
+        .join(" ");
+      return `${intro} ${body}`;
+    }
+
+    function findResponse(question) {
+      const rankedMatches = answers
+        .map((answer) => ({ ...answer, score: scoreAnswer(question, answer) }))
+        .filter((answer) => answer.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 2);
+
+      if (rankedMatches.length > 0) {
+        return joinResponses(rankedMatches);
+      }
+
+      const index = Math.abs([...normalized].reduce((total, char) => total + char.charCodeAt(0), 0)) % fallbackResponses.length;
+      return fallbackResponses[index];
+    }
+
+    function ask(question) {
+      const trimmed = question.trim();
+      if (!trimmed) return;
+
+      addMessage(trimmed, "user");
+      input.value = "";
+
+      const typing = showTyping();
+      window.setTimeout(() => {
+        typing.remove();
+        addMessage(findResponse(trimmed), "assistant");
+      }, 520 + Math.min(trimmed.length * 8, 600));
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      ask(input.value);
+    });
+
+    suggestionButtons.forEach((button) => {
+      button.addEventListener("click", () => ask(button.textContent));
+    });
+
+    addMessage(
+      "Hi, I'm Julien's portfolio assistant. Ask me what he is looking for next, which projects best show his impact, how his skills connect to strategy and design roles, or how he approaches creative problem solving."
+    );
+  </script>
+</body>
+</html>
